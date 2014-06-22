@@ -1,0 +1,78 @@
+Creating Tidy Data Set - Getting & Cleaning Data project - dcapizzi
+
+Summary
+Run_analysis.R documents the analysis used to create the tidydata.csv file from the Human Activity Recognition Using Smartphones Data Set. To get a full list of the variables, review the Code Book.md file included with the file set.
+
+
+Steps:
+1) Imports data set and unzip files
+2) Imports data and consolidate into training and test data sets
+3) Merges training and test data sets to create one data unified set
+4) Extracts only the measurements on the mean and standard deviation for each measurement
+5) Attaches descriptive activity names (running, walking) to the data set
+6) Creates tidy data set with average of each variable for each activity and subject
+7) Outputs newly created data files
+
+Part 1: Import data and unzip file
+
+1A) To begin, the R code creates a new folder called “data” in the active Working Directory of the R session. If there is already a folder called data, it will not overwrite it but instead moves onto the next activity.
+
+1B) The code then downloads source data from the Human Activity Recognition Using Smartphones Data Set into the created “data” folder. Source data can be found from the following location:
+
+https://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+
+Again, the data is only downloaded if the file does not already exist in the specified location.
+
+1C) Data is then unzipped into the  the downloaded "data.zip" file into the data folder. The unzipped and all files for the analysis are stored in the “data” folder.
+
+
+Part 2: Import data and consolidate into training and test data frames
+
+2A) First, the downloaded files that make up the data set are imported into the R session, including:
+
+* activity_lables - a table with activity descriptions
+* features - a file with the “headings” for each variable in the training and test data sets
+
+2B: The R session then imports and consolidates the "train" data file, including separate files for x variables, y variables, and subjects, binds the columns together, and attaches the column names to the file. 
+
+When the files are consolidated, extraneous data frames are removed from the session.
+
+
+2C) The R session then imports and consolidates the “test” data file, in the same way as  the “train” data set was imported.
+
+
+Part 3: Merges the training and the test sets to create one data set 
+
+3A) The R “rbind” command is used to bind the full test and training sets together into a data table called “data”. The previous data sets (train, test, features) are again removed from the workspace to simplify the analysis. 
+
+Part 4: Extracts only the measurements on the mean and standard deviation for each measurement into a “subsetData” data table
+
+4A) The “grep” command is used to identify only the column variables related to the “mean” and “standard deviation.” Based on the initial file documentation and instructions, only variables with “mean()” and “std()” are selected. The data is subset to only the first three columns (activity, subject, etc.) and the variables selected above.
+
+4B) Variable names are then “cleansed” using the gsub command to be more readable. All “-“ characters are removed and replaced with a “.” in the column headings. Capitals are converted to lowercase. 
+
+Part 5: Uses descriptive activity names to better describe the activities in the “subsetData” data table
+
+5A) An “index” variable is created of the same length of the data set and combined to the subsetData to maintain the order of the records during merge
+
+5B) The table providing the descriptive activity names (e.g. running, standing) is merged with subsetData which only contains the numerical activity IDs (1,2,3) using the “merge” command
+
+5C) Data is “reordered” using the index column to ensure data fidelity
+
+5D) Renames the new column headings as “activity index” and “activity”
+
+5E) Removes “row names” from the merging process
+
+5F) Reorders the columns and removes the activityindex variable
+
+Part 6: Creates tidy data set with average of each variable for each activity and subject
+
+6A) Uses R “reshape” package to create a new data table called MeltData with “subject” and “activity” as id’s and 
+
+6B) Uses the “reshape” command cast to calculate the mean of each variable according to each subject and activity pair
+
+6C) Removes the “MeltData” data frame
+
+Part 7: Output data files
+
+Exports the subsetData and tidyData data tables into tidydata.csv and subsetdata.csv files, respectively, in the working directory, completing the analysis.
